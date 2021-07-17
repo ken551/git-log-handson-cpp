@@ -12,6 +12,7 @@ int myStrLen(unsigned char* str);
 void setGitRoot(char* buf, char* argv);
 void myCompress(const char* filename, unsigned char* dst);
 void myUncompress(const char* filename, unsigned char* dst);
+void printLog(char *commitID, char *str);
 
 const uLongf BUF_SIZE = 1024;
 
@@ -69,28 +70,7 @@ int main(int argc, char** argv) {
         }
         i ++;
     }
-    //get commit message
-    char* commitMessage;
-    commitMessage = strstr((char*)str, "\n\n");
-    commitMessage += 2;
-
-    //get time
-    char* commitTime;
-    commitTime = strstr((char*)str, "> ");
-    commitTime += 2;
-    time_t hoge = strtol(strtok(commitTime, " "), nullptr, 10);
-    char* timeZone = strtok(NULL, "\n");
-
-    char* author;
-    author = strstr((char*)str, "author ");
-    author += 7;
-
-    //output commit info
-    cout << "commit " << commitID << endl;
-    cout << "Author: " << author << endl;
-    cout << "Date: " << strtok(ctime(&hoge), "\n") << " " << timeZone << endl;
-    cout << endl;
-    cout << commitMessage << endl;
+    printLog(commitID, (char*)str);
     return 0;
 }
 
@@ -115,6 +95,31 @@ void setGitRoot(char* buf, char* argv){
     memset(buf, 0, 100*sizeof(char));
     strcat(buf, argv);
     strcat(buf, "/.git/");
+}
+
+void printLog(char *commitID, char *str){
+    //get commit message
+    char* commitMessage;
+    commitMessage = strstr((char*)str, "\n\n");
+    commitMessage += 2;
+
+    //get time
+    char* commitTime;
+    commitTime = strstr((char*)str, "> ");
+    commitTime += 2;
+    time_t hoge = strtol(strtok(commitTime, " "), nullptr, 10);
+    char* timeZone = strtok(NULL, "\n");
+
+    char* author;
+    author = strstr((char*)str, "author ");
+    author += 7;
+
+    //output commit info
+    cout << "commit " << commitID << endl;
+    cout << "Author: " << author << endl;
+    cout << "Date: " << strtok(ctime(&hoge), "\n") << " " << timeZone << endl;
+    cout << endl;
+    cout << commitMessage << endl;
 }
 
 void myCompress(const char* filename, unsigned char* dst){
