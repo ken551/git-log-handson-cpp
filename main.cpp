@@ -51,14 +51,14 @@ int main(int argc, char** argv) {
     commitID[40]= 0;
 
     //get commit object
-    char folderName[3] = {(char)str[0], (char)str[1], 0};
+    char folderName[3] = {(char)commitID[0], (char)commitID[1], 0};
     setGitRoot(buf, argv[1]);
     strcat(buf, "objects/");
     strcat(buf, folderName);
     strcat(buf, "/");
-    char fileName[myStrLen(str)-1];
-    strncpy(fileName, (const char*)&str[2], myStrLen(str)-1);
-    fileName[myStrLen(str)] = 0;
+    char fileName[myStrLen((unsigned char*)commitID)-1];
+    strncpy(fileName, (const char*)&commitID[2], myStrLen((unsigned char*)commitID)-1);
+    fileName[myStrLen((unsigned char*)commitID)] = 0;
     strcat(buf, fileName);
 
     memset(str, 1, BUF_SIZE * sizeof(unsigned char));
@@ -70,6 +70,10 @@ int main(int argc, char** argv) {
         }
         i ++;
     }
+    char *parentIDPtr;
+    parentIDPtr = strstr((char*)str, "parent ");
+    parentIDPtr += 7;
+//    cout << parentIDPtr << endl;
     printLog(commitID, (char*)str);
     return 0;
 }
